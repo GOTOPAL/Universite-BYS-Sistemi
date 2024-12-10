@@ -1,0 +1,75 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KTÜ Giriş Sayfası</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="~/css/index.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <div class="logo-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Karadeniz_Technical_University_logo.svg/1024px-Karadeniz_Technical_University_logo.svg.png" alt="KTÜ Logo" class="logo">
+            </div>
+
+            <h1>KTÜ Giriş</h1>
+
+            <!-- Kullanıcı seçimi -->
+            <div class="user-selection">
+                <button id="student-login-btn" class="selection-btn" onclick="showForm('student-form')">Öğrenci Girişi</button>
+                <button id="staff-login-btn" class="selection-btn" onclick="showForm('staff-form')">Personel Girişi</button>
+            </div>
+
+            <!-- Giriş formları -->
+            <div id="forms-container">
+                <!-- Öğrenci Giriş Formu -->
+                <form id="student-form" class="login-form" method="post" asp-action="LoginUser" asp-controller="Account">
+                    <input type="text" name="Username" placeholder="Kullanıcı Adı" required>
+                    <input type="password" name="Password" placeholder="Şifre" required>
+                    <input type="hidden" name="Role" value="Student">
+                    <button type="submit" class="submit-btn">Öğrenci Girişi</button>
+                </form>
+
+                <!-- Personel Giriş Formu -->
+                <form id="staff-form" class="login-form" method="post" asp-action="LoginUser" asp-controller="Account" style="display: none;">
+                    <input type="text" name="Username" placeholder="Kullanıcı Adı" required>
+                    <input type="password" name="Password" placeholder="Şifre" required>
+                    <input type="hidden" name="Role" value="Advisor">
+                    <button type="submit" class="submit-btn">Personel Girişi</button>
+                </form>
+            </div>
+            <br />
+
+            <!-- Hata mesajı -->
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <p style="color:red">@ViewBag.ErrorMessage</p>
+            }
+
+
+            <!-- Şifremi Unuttum Butonu -->
+            <div class="forgot-password">
+                <a href="@Url.Action("ForgotPassword", "Account")">Şifremi Unuttum</a>
+            </div>
+        </div>
+    </div>
+
+    <script>function showForm(formId) {
+            // Tüm formları gizle
+            document.getElementById('student-form').style.display = 'none';
+            document.getElementById('staff-form').style.display = 'none';
+
+            // Seçilen formu göster
+            document.getElementById(formId).style.display = 'block';
+        }
+
+        // Başlangıçta öğrenci formunu göster
+        document.getElementById('student-form').style.display = 'block';</script>
+</body>
+</html>

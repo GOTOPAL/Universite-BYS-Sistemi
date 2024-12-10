@@ -1,0 +1,251 @@
+﻿/* Genel Stil */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(135deg, #3a8cb5, #1d3c64);
+    color: #000;
+}
+
+/* Sol Menü */
+.menu {
+    width: 250px;
+    background-color: #3a3a3a;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    position: fixed;
+}
+
+    .menu .logo {
+        width: 150px;
+        height: auto;
+        margin: 0 auto;
+        display: block;
+        margin-bottom: 15px;
+    }
+
+    .menu h2 {
+        font-family: 'Poppins', sans-serif; /* Poppins font for consistency */
+        text-align: center;
+        margin-bottom: 15px;
+        font-size: 1.4rem; /* Daha küçük font boyutu */
+        font-weight: 500; /* Daha hafif font ağırlığı */
+    }
+
+    /* Menü Öğeleri */
+    .menu .nav-item {
+        margin: 10px 0;
+        font-size: 1rem; /* Daha küçük font boyutu */
+        font-weight: 500; /* Daha hafif font ağırlığı */
+        cursor: pointer;
+        padding: 10px;
+        text-align: center;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+    }
+
+        .menu .nav-item:hover {
+            background-color: #505050;
+        }
+
+        .menu .nav-item.active {
+            background-color: #0078d7;
+            color: white;
+        }
+
+        .menu .nav-item:hover {
+            background-color: #0078d7;
+            color: white;
+        }
+
+
+/* İçerik Alanı */
+.content {
+    margin-left: 250px;
+    padding: 20px;
+    width: 100%;
+    overflow-y: auto;
+}
+
+    .content h1 {
+        font-family: 'Poppins', sans-serif; /* Poppins font */
+        font-size: 2.2rem; /* Daha küçük başlık boyutu */
+        margin-bottom: 20px;
+        font-weight: 600; /* Orta kalınlık */
+    }
+
+.section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+    .section h2 {
+        margin-bottom: 10px;
+        font-size: 1.6rem; /* Başlık boyutunu biraz küçültüyoruz */
+        color: #0078d7;
+        font-weight: 600; /* Orta kalınlık */
+    }
+
+    .section p {
+        font-size: 1rem; /* Paragraf metni için uygun font boyutu */
+        color: #333;
+    }
+
+/* Buton Stilleri */
+.btn {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #0078d7, #00509e);
+    border: none;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem; /* Buton yazı boyutunu küçültüyoruz */
+    font-weight: 500; /* Daha hafif font ağırlığı */
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+    .btn:hover {
+        background: linear-gradient(135deg, #00509e, #0078d7);
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn:focus {
+        outline: none;
+    }
+
+/* Ders Seçimi */
+.combo-list {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    max-height: 800px; /* Daha büyük bir alan için artırıldı */
+    overflow-y: auto;
+    padding-right: 15px; /* Kaydırma çubuğu için biraz daha boşluk eklendi */
+    border: 2px solid #ccc; /* Liste alanına çerçeve eklendi */
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #f9f9f9; /* Liste alanının arka plan rengi */
+}
+
+.course-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px; /* Seçim kutusunun boyutunu artırır */
+    font-size: 1.0rem; /* Yazı boyutunu artırır */
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, border 0.3s, transform 0.2s;
+}
+
+    .course-option:hover {
+        background-color: #e0e0e0;
+        transform: scale(1.02); /* Hover efekti */
+    }
+
+    .course-option.selected {
+        background-color: #0078d7;
+        color: white;
+        border: 2px solid #00509e;
+        font-weight: bold;
+        transform: scale(1.00); /* Seçilenler için belirgin efekt */
+    }
+
+.course-credits {
+    font-size: 1rem; /* Kredi yazısının boyutunu ayarla */
+    color: #444;
+}
+
+
+/* Güncelleme Bölümü */
+.update-section {
+    font-size: 1.4rem; /* Genel yazı tipi boyutunu küçültüyoruz */
+    margin-top: 20px;
+}
+
+    .update-section h3 {
+        font-size: 1.4rem; /* Başlık boyutunu küçültüyoruz */
+        margin-bottom: 15px;
+        color: #0078d7;
+    }
+
+    .update-section label {
+        font-size: 1.1rem; /* Etiket boyutunu biraz daha küçültüyoruz */
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .update-section input {
+        font-size: 1.1rem; /* Input yazı boyutunu biraz küçültüyoruz */
+        padding: 10px;
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    .update-section button {
+        font-size: 1rem; /* Buton yazı boyutunu ayarlıyoruz */
+        padding: 15px 25px;
+        background: linear-gradient(135deg, #0078d7, #00509e);
+        border: none;
+        color: white;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        margin-top: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+        .update-section button:hover {
+            background: linear-gradient(135deg, #00509e, #0078d7);
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+.menu .logo {
+    width: 200px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 15px;
+    filter: brightness(1.8); /* Parlaklığı artır */
+}
+
+
+/* Çıkış Yap butonu stili */
+.menu .logout {
+    margin-top: auto; /* Menüde en alt kısma itme */
+    /* background-color: #d32f2f; /* Kırmızı arka plan */
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 10px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .menu .logout:hover {
+        background-color: #dec616 /* Hoverda daha koyu kırmızı */
+    }
+
+

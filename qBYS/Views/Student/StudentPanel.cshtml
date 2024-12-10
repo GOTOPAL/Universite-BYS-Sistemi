@@ -1,0 +1,141 @@
+﻿@{
+    Layout = null; // Eğer layout kullanılmayacaksa null bırakılır
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenci Bilgilendirme Paneli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/spanel.css">
+    <script src="~/js/sscript.js" defer></script>
+</head>
+<body>
+
+    <!-- Sol Menü -->
+    <div class="menu">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Karadeniz_Technical_University_logo.svg/1024px-Karadeniz_Technical_University_logo.svg.png" alt="KTÜ Logo" class="logo">
+        <br>
+        @if (ViewBag.Student != null)
+        {
+            <h2>@ViewBag.Student.firstName @ViewBag.Student.lastName</h2>
+        }
+        else
+        {
+            <h2>Öğrenci Bilgileri Yüklenemedi</h2>
+        }
+        <div id="menu-items">
+            <div class="nav-item active" onclick="showSection('duyurular')">Duyurular</div>
+            <div class="nav-item" onclick="showSection('ogrenci')">Öğrenci Bilgileri</div>
+            <div class="nav-item" onclick="showSection('dersler')">Ders Seçimi</div>
+            <div class="nav-item" onclick="showSection('danisman')">Danışman</div>
+        </div>
+        <div class="nav-item logout" onclick="logout()">Çıkış Yap</div>
+    </div>
+
+    <!-- İçerik Alanı -->
+    <div class="content">
+        <!-- Duyurular Sayfası -->
+        <div id="duyurular" class="section">
+            <h1>Duyurular</h1>
+            <p><strong>Yaz Okulu Başvuruları:</strong> 15 Aralık'a kadar başvurular kabul edilmektedir.</p>
+            <p><strong>Final Sınavı Tarihi:</strong> 20 Aralık 2024</p>
+        </div>
+
+        <!-- Öğrenci Bilgileri -->
+        <div id="ogrenci" class="section" style="display: none;">
+            <h1>Öğrenci Bilgileri</h1>
+            @if (ViewBag.Student != null)
+            {
+                <p><strong>Öğrenci No:</strong> @ViewBag.Student.studentID</p>
+                <p><strong>Ad:</strong> @ViewBag.Student.firstName @ViewBag.Student.lastName</p>
+                <p><strong>Email:</strong> @ViewBag.Student.email</p>
+                <div class="update-section">
+                    <h3>Bilgileri Güncelle</h3>
+                    <form asp-action="UpdateStudent" method="post">
+                        <input type="hidden" name="id" value="@ViewBag.Student.studentID" />
+                        <label for="newEmail">Yeni E-posta (Opsiyonel):</label>
+                        <input type="email" id="newEmail" name="newEmail" placeholder="Yeni e-posta">
+                        <br><br>
+                        <label for="newPassword">Yeni Şifre (Opsiyonel):</label>
+                        <input type="password" id="newPassword" name="newPassword" placeholder="Yeni şifre">
+                        <br><br>
+                        <button type="submit" class="btn">Bilgileri Güncelle</button>
+                    </form>
+                </div>
+                <br />
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <p class="success-message" style="color: green;">@TempData["SuccessMessage"]</p>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <p class="error-message" style="color: red;">@TempData["ErrorMessage"]</p>
+                }
+            }
+            else
+            {
+                <p>Öğrenci bilgileri yüklenemedi. Lütfen tekrar deneyin.</p>
+            }
+        </div>
+
+        <!-- Ders Seçimi -->
+        <!-- Ders Seçimi -->
+        <div id="dersler" class="section" style="display: none;">
+            <h1>Ders Seçimi</h1>
+            @if (ViewBag.Courses != null && ViewBag.Courses.Count > 0)
+            {
+                <form id="courseSelectionForm" method="post" asp-action="SubmitCourseSelections">
+                    <div class="course-selection">
+                        <ul id="courseList" class="combo-list">
+                            @foreach (var course in ViewBag.Courses)
+                            {
+                                <li class="course-option" onclick="toggleCourseSelection('@course.courseID')">
+                                    <span>@course.courseName (@course.courseCode)</span>
+                                    <span class="course-credits">@course.credit Kredi</span>
+                                    <input type="checkbox" name="selectedCourseIds" value="@course.courseID" style="display: none;">
+                                </li>
+                            }
+                        </ul>
+                        <button type="submit" id="confirmSelection" class="btn">Dersleri Onayla</button>
+                    </div>
+                </form>
+                <br/>
+                
+                @if (TempData["CourseSelectionMessage"] != null)
+                {
+                    <p class="success-message" style="color: green; font-weight: bold; margin-top: 10px;">@TempData["CourseSelectionMessage"]</p>
+                }
+                @if (TempData["CourseSelectionError"] != null)
+                {
+                    <p class="error-message" style="color: red; font-weight: bold; margin-top: 10px; ">@TempData["CourseSelectionError"]</p>
+                }
+            }
+            else
+            {
+                <p>Ders bilgileri yüklenemedi. Lütfen tekrar deneyin.</p>
+            }
+        </div>
+
+
+        <!-- Danışman Bilgileri Sayfası -->
+        <div id="danisman" class="section" style="display: none;">
+            <h1>Danışman Bilgileri</h1>
+            @if (ViewBag.Advisor != null)
+            {
+                <p><strong>Ad:</strong> @ViewBag.Advisor.FullName</p>
+                <p><strong>Unvan:</strong> @ViewBag.Advisor.Title</p>
+                <p><strong>Bölüm:</strong> @ViewBag.Advisor.Department</p>
+            }
+            else
+            {
+                <p>Danışman bilgileri yüklenemedi.</p>
+            }
+        </div>
+    </div>
+
+
+</body>
+</html>
