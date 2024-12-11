@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets/qBYS.bundle.scp.css"
     },
     {
+      "Id": "/Users/goktug/Desktop/qBYS/qBYS/wwwroot/css/apanel.css",
+      "PackagePath": "staticwebassets/css/apanel.css"
+    },
+    {
       "Id": "/Users/goktug/Desktop/qBYS/qBYS/wwwroot/css/index.css",
       "PackagePath": "staticwebassets/css/index.css"
     },
@@ -15,6 +19,10 @@
     {
       "Id": "/Users/goktug/Desktop/qBYS/qBYS/wwwroot/favicon.ico",
       "PackagePath": "staticwebassets/favicon.ico"
+    },
+    {
+      "Id": "/Users/goktug/Desktop/qBYS/qBYS/wwwroot/js/ascript.js",
+      "PackagePath": "staticwebassets/js/ascript.js"
     },
     {
       "Id": "/Users/goktug/Desktop/qBYS/qBYS/wwwroot/js/sscript.js",

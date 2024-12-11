@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "fwfR58GHOaPlZv+9xRwzXLQ0nWOj8QpNEN9F3ecwDbk=",
+  "Hash": "FZrajW2U7PHwnA4SIyfYmCe/YZnlIvlGKtIZYwKEZA0=",
   "Source": "qBYS",
   "BasePath": "_content/qBYS",
   "Mode": "Default",
@@ -49,6 +49,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "/Users/goktug/Desktop/qBYS/qBYS/obj/Debug/net7.0/scopedcss/projectbundle/qBYS.bundle.scp.css"
+    },
+    {
+      "Identity": "/Users/goktug/Desktop/qBYS/qBYS/wwwroot/css/apanel.css",
+      "SourceId": "qBYS",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/goktug/Desktop/qBYS/qBYS/wwwroot/",
+      "BasePath": "_content/qBYS",
+      "RelativePath": "css/apanel.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/css/apanel.css"
     },
     {
       "Identity": "/Users/goktug/Desktop/qBYS/qBYS/wwwroot/css/index.css",
@@ -100,6 +117,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/favicon.ico"
+    },
+    {
+      "Identity": "/Users/goktug/Desktop/qBYS/qBYS/wwwroot/js/ascript.js",
+      "SourceId": "qBYS",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/goktug/Desktop/qBYS/qBYS/wwwroot/",
+      "BasePath": "_content/qBYS",
+      "RelativePath": "js/ascript.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/ascript.js"
     },
     {
       "Identity": "/Users/goktug/Desktop/qBYS/qBYS/wwwroot/js/sscript.js",

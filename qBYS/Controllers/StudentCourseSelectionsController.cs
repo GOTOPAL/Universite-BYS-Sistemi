@@ -49,6 +49,25 @@ namespace qBYS.Controllers
             return Ok(studentsWithCourses);
         }
 
+
+
+
+
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // GET: api/StudentCourseSelections/5
         [HttpGet("{studentId}")]
         public IActionResult GetStudentCourseSelections(int studentId)
@@ -79,6 +98,10 @@ namespace qBYS.Controllers
             // Veri bulundu, JSON formatında geri dön
             return Ok(selections);
         }
+
+
+
+
 
         // PUT: api/StudentCourseSelections/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

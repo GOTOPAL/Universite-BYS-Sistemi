@@ -121,5 +121,72 @@ namespace qBYS.Controllers
         {
             return _context.NonConfirmedSelections.Any(e => e.Id == id);
         }
-    }
+
+
+
+
+
+        // GET: api/NonConfirmedSelections/Advisor/{advisorId}
+        [HttpGet("Advisor/{advisorId}")]
+        public async Task<ActionResult<IEnumerable<NonConfirmedSelections>>> GetNonConfirmedSelectionsForAdvisor(int advisorId)
+        {
+            var nonConfirmedSelections = await _context.NonConfirmedSelections
+                .Include(ns => ns.Student)
+                .Include(ns => ns.Course)
+                .Where(ns => ns.Student.AdvisorID == advisorId)
+                .Select(ns => new
+                {
+                    ns.Id,
+                    ns.Student.StudentID,
+                    ns.Student.FirstName,
+                    ns.Student.LastName,
+                    ns.Course.CourseName,
+                    ns.Course.CourseID
+                })
+                .ToListAsync();
+
+            // Boş bir array döndür
+            return Ok(nonConfirmedSelections);
+        }
+
+
+        // GET: api/NonConfirmedSelections/Student/{studentId}
+        [HttpGet("Student/{studentId}")]
+        public async Task<IActionResult> GetNonConfirmedSelectionsByStudent(int studentId)
+        {
+            try
+            {
+                // Veritabanından belirli bir öğrenciye ait onaylanmamış seçimleri al
+                var nonConfirmedSelections = await _context.NonConfirmedSelections
+                    .Include(nc => nc.Course) // İlişkili ders bilgilerini de dahil et
+                    .Where(nc => nc.StudentId == studentId)
+                    .Select(nc => new
+                    {
+                        nc.Id,
+                        nc.StudentId,
+                        FirstName = nc.Student.FirstName,
+                        LastName = nc.Student.LastName,
+                        CourseName = nc.Course.CourseName,
+                        CourseID = nc.Course.CourseID
+                    })
+                    .ToListAsync();
+
+                // Eğer sonuç bulunamazsa NotFound döndür
+                if (nonConfirmedSelections == null || !nonConfirmedSelections.Any())
+                {
+                    return NotFound(new { message = "Bu öğrenci için onay bekleyen ders seçimi bulunamadı." });
+                }
+
+                // JSON formatında başarılı sonuç döndür
+                return Ok(nonConfirmedSelections);
+            }
+            catch (Exception ex)
+            {
+                // Hata durumunda 500 döndür
+                return StatusCode(500, new { message = "Bir hata oluştu.", error = ex.Message });
+            }
+        }
+
+        }
+
 }

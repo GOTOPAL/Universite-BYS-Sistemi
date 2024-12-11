@@ -129,51 +129,44 @@ body {
         outline: none;
     }
 
+
 /* Ders Seçimi */
 .combo-list {
     display: flex;
     flex-direction: column;
     margin-top: 20px;
-    max-height: 1500px; /* Daha büyük bir alan için artırıldı */
+    max-height: 1500px;
     overflow-y: auto;
-    padding-right: 15px; /* Kaydırma çubuğu için biraz daha boşluk eklendi */
-    border: 2px solid #ccc; /* Liste alanına çerçeve eklendi */
-    border-radius: 10px;
-    padding: 10px;
-    background-color: #f9f9f9; /* Liste alanının arka plan rengi */
+    padding-right: 10px;
 }
 
 .course-option {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 100px; /* Seçim kutusunun boyutunu artırır */
-    font-size: 1.0rem; /* Yazı boyutunu artırır */
+    padding: 10px;
     background-color: #f0f0f0;
-    border-radius: 10px;
-    margin-bottom: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
     cursor: pointer;
-    transition: background-color 0.3s, border 0.3s, transform 0.2s;
+    transition: background-color 0.3s, border 0.3s;
+    font-size: 1rem;
+
 }
 
     .course-option:hover {
-        background-color: #e0e0e0;
-        transform: scale(1.02); /* Hover efekti */
+        background-color: #d6d6d6;
     }
 
     .course-option.selected {
         background-color: #0078d7;
         color: white;
         border: 2px solid #00509e;
-        font-weight: bold;
-        transform: scale(1.00); /* Seçilenler için belirgin efekt */
     }
 
 .course-credits {
-    font-size: 1rem; /* Kredi yazısının boyutunu ayarla */
-    color: #444;
+    font-size: 0.9rem; /* Kredi sayısı için uygun boyut */
+    color: #555;
 }
-
 
 /* Güncelleme Bölümü */
 .update-section {
@@ -222,7 +215,7 @@ body {
         }
 
 .menu .logo {
-    width: 200px;
+    width: 150px;
     height: auto;
     margin: 0 auto;
     display: block;
@@ -247,5 +240,6 @@ body {
     .menu .logout:hover {
         background-color: #dec616 /* Hoverda daha koyu kırmızı */
     }
+
 
 

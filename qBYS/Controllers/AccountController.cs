@@ -82,6 +82,7 @@ namespace qBYS.Controllers
                     if (user.RelatedID.HasValue)
                     {
                         HttpContext.Session.SetString("StudentID", user.RelatedID.Value.ToString());
+
                     }
                     else
                     {
@@ -93,6 +94,17 @@ namespace qBYS.Controllers
                 }
                 else if (role == "Advisor")
                 {
+                    // Advisor ID'sini oturuma ekle
+                    if (user.RelatedID.HasValue)
+                    {
+                        HttpContext.Session.SetString("AdvisorID", user.RelatedID.Value.ToString());
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMessage = "İlgili danışman bilgisi bulunamadı.";
+                        return View("Login");
+                    }
+
                     return RedirectToAction("AdvisorPanel", "Advisor");
                 }
             }

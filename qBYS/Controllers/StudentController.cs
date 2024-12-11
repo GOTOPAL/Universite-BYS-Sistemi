@@ -3,16 +3,20 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.EntityFrameworkCore;
+using qBYS.Models;
 
 namespace qBYS.Controllers
 {
     public class StudentController : Controller
     {
         private readonly HttpClient _httpClient;
+        private readonly AppDbContext _context;
 
-        public StudentController(IHttpClientFactory httpClientFactory)
+        public StudentController(HttpClient httpClient, AppDbContext context)
         {
-            _httpClient = httpClientFactory.CreateClient();
+            _httpClient = httpClient;
+            _context = context;
         }
 
         // Öğrenci Panelini Görüntüleme
@@ -71,6 +75,65 @@ namespace qBYS.Controllers
 
             // Dersleri ViewBag'e aktar
             ViewBag.Courses = courses;
+
+
+
+
+            try
+            {
+                // NonConfirmedSelections kontrolü
+                var nonConfirmedResponse = await _httpClient.GetAsync($"https://localhost:7268/api/NonConfirmedSelections/Student/{studentId}");
+                if (nonConfirmedResponse.IsSuccessStatusCode)
+                {
+                    var nonConfirmedData = await nonConfirmedResponse.Content.ReadAsStringAsync();
+                    var nonConfirmedSelections = JsonConvert.DeserializeObject<List<dynamic>>(nonConfirmedData);
+
+                    if (nonConfirmedSelections != null && nonConfirmedSelections.Any())
+                    {
+                        ViewBag.SelectionMessage = "Ders seçiminiz danışman onayı bekliyor.";
+                        
+                        ViewBag.AllowCourseSelection = false;
+                        return View();
+                    }
+                }
+
+                // StudentCourseSelections kontrolü
+                var approvedResponse = await _httpClient.GetAsync($"https://localhost:7268/api/StudentCourseSelections/{studentId}");
+                if (approvedResponse.IsSuccessStatusCode)
+                {
+                    var approvedData = await approvedResponse.Content.ReadAsStringAsync();
+                    var approvedSelections = JsonConvert.DeserializeObject<List<dynamic>>(approvedData);
+
+                    if (approvedSelections != null && approvedSelections.Any())
+                    {
+                        ViewBag.SelectionMessage = "Ders seçim işleminiz tamamlanmıştır.";
+
+                        ViewBag.AllowCourseSelection = false;
+                        return View();
+                    }
+                }
+
+                // Ders seçimi aktif hale getir
+                ViewBag.SelectionMessage = null;
+                ViewBag.AllowCourseSelection = true;
+                var coursesResponse = await _httpClient.GetAsync($"https://localhost:7268/api/Courses");
+                if (coursesResponse.IsSuccessStatusCode)
+                {
+                    var coursesData = await coursesResponse.Content.ReadAsStringAsync();
+                    var coursess = JsonConvert.DeserializeObject<List<dynamic>>(coursesData);
+                    ViewBag.Courses = coursess;
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.SelectionMessage = $"Bir hata oluştu: {ex.Message}";
+                ViewBag.AllowCourseSelection = false;
+            }
+
+
+            
+
+
 
 
 
@@ -159,10 +222,15 @@ namespace qBYS.Controllers
 
 
 
+        
 
 
 
 
+
+       
+
+        
 
 
         [HttpPost]
