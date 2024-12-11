@@ -77,8 +77,21 @@ namespace qBYS.Controllers
             ViewBag.Courses = courses;
 
 
+            // DanışmanDersleri API'den çek
+            var SelectionCoursesResponse = await _httpClient.GetAsync($"https://localhost:7268/api/StudentCourseSelections/{studentId}");
+            if (!SelectionCoursesResponse.IsSuccessStatusCode)
+            {
+                ViewBag.ErrorMessage = "Ders bilgileri yüklenemedi. Lütfen tekrar deneyin.";
+                return View("StudentPanel");
+            }
+            var scsJson = await SelectionCoursesResponse.Content.ReadAsStringAsync();
+            var scs = JsonConvert.DeserializeObject<List<dynamic>>(scsJson);
+
+            // Dersleri ViewBag'e aktar
+            ViewBag.Scs = scs;
 
 
+            
             try
             {
                 // NonConfirmedSelections kontrolü
@@ -132,7 +145,7 @@ namespace qBYS.Controllers
 
 
             
-
+            
 
 
 
@@ -143,8 +156,17 @@ namespace qBYS.Controllers
         }
 
 
+            
 
-        [HttpGet]
+
+
+
+
+
+
+
+
+          [HttpGet]
         public async Task<IActionResult> CourseSelection()
         {
             try
@@ -221,16 +243,7 @@ namespace qBYS.Controllers
 
 
 
-
-        
-
-
-
-
-
-       
-
-        
+      
 
 
         [HttpPost]

@@ -21,14 +21,11 @@ namespace qBYS.Models
             get;
             set;
         }
-        // Navigation Properties
-        public
-       ICollection<StudentCourseSelections>
-       StudentCourseSelections
-        { get; set; } = new
-       List<StudentCourseSelections>();
+        
 
         public virtual ICollection<NonConfirmedSelections> NonConfirmedSelections { get; set; }
+        public virtual ICollection<StudentCourseSelections> StudentCourseSelections { get; set; }
+
 
     }
 }

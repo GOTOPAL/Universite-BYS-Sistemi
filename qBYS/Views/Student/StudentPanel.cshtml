@@ -1,42 +1,44 @@
-﻿@{
-	Layout = null; // Eğer layout kullanılmayacaksa null bırakılır
+﻿
+@{
+    Layout = null; // Eğer layout kullanılmayacaksa null bırakılır
 }
 
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Öğrenci Bilgilendirme Paneli</title>
-	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="~/css/spanel.css">
-	<script src="~/js/sscript.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenci Bilgilendirme Paneli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/spanel.css">
+    <script src="~/js/sscript.js" defer></script>
 </head>
 <body>
 
-	<!-- Sol Menü -->
-	<div class="menu">
-		<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Karadeniz_Technical_University_logo.svg/1024px-Karadeniz_Technical_University_logo.svg.png" alt="KTÜ Logo" class="logo">
-		<br>
-		@if (ViewBag.Student != null)
-		{
-			<h2>@ViewBag.Student.firstName @ViewBag.Student.lastName</h2>
-		}
-		else
-		{
-			<h2>Öğrenci Bilgileri Yüklenemedi</h2>
-		}
-		<div id="menu-items">
-			<div class="nav-item active" onclick="showSection('duyurular')">Duyurular</div>
-			<div class="nav-item" onclick="showSection('ogrenci')">Öğrenci Bilgileri</div>
+    <!-- Sol Menü -->
+    <div class="menu">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Karadeniz_Technical_University_logo.svg/1024px-Karadeniz_Technical_University_logo.svg.png" alt="KTÜ Logo" class="logo">
+        <br>
+        @if (ViewBag.Student != null)
+        {
+            <h2>@ViewBag.Student.firstName @ViewBag.Student.lastName</h2>
+        }
+        else
+        {
+            <h2>Öğrenci Bilgileri Yüklenemedi</h2>
+        }
+        <div id="menu-items">
+            <div class="nav-item active" onclick="showSection('duyurular')">Duyurular</div>
+            <div class="nav-item" onclick="showSection('ogrenci')">Öğrenci Bilgileri</div>
             <div class="nav-item" onclick="showSection('derslerim')">Ders Bilgileri</div>
-			<div class="nav-item" onclick="showSection('dersler')">Ders Seçimi</div>
-			<div class="nav-item" onclick="showSection('danisman')">Danışman</div>
-		</div>
-		<div class="nav-item logout" onclick="logout()">Çıkış Yap</div>
-	</div>
+            <div class="nav-item" onclick="showSection('dersler')">Ders Seçimi</div>
+            <div class="nav-item" onclick="showSection('danisman')">Danışman</div>
+        </div>
 
-	<!-- İçerik Alanı -->
+        <div class="nav-item logout" onclick="logout()">Çıkış Yap</div>
+    </div>
+
+    <!-- İçerik Alanı -->
     <div class="content">
         <!-- Duyurular Sayfası -->
         <div id="duyurular" class="section">
@@ -85,33 +87,46 @@
         <!-- Ders Bilgileri -->
 
         <div id="derslerim" class="section" style="display: none;">
-            <h1>Onaylanmış Derslerim</h1>
 
-            @if (TempData["ErrorMessage"] != null)
+
+            <h1>Seçilen Dersler</h1>
+            @if (ViewBag.Scs != null && ViewBag.Scs.Count > 0)
             {
-                <div class="error-message" style="color: red; font-weight: bold; margin-top: 10px;">
-                    @TempData["ErrorMessage"]
-                </div>
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Ders Adı</th>
+                            <th>Ders Kodu</th>
+                            <th>Bölüm</th>
+                            <th>Kredi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var course in ViewBag.Scs)
+                        {
+                            <tr>
+                                <td>@course.course.courseName</td>
+                                <td>@course.course.courseCode</td>
+                                <td>@course.course.department</td>
+                                <td>@course.course.credit</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             }
-            else if (ViewBag.ApprovedCourses != null && ViewBag.ApprovedCourses.Count > 0)
+            else if (ViewBag.ErrorMessage != null)
             {
-                <ul class="course-list">
-                    @foreach (var course in ViewBag.ApprovedCourses)
-                    {
-                        <li>
-                            <p><strong>@course.CourseName (@course.CourseCode)</strong></p>
-                            <p>Bölüm: @course.Department</p>
-                            <p>Kredi: @course.Credit</p>
-                        </li>
-                    }
-                </ul>
+                <div class="error-container">
+                    <p class="error-message">@ViewBag.ErrorMessage</p>
+                </div>
             }
             else
             {
-                <div class="info-message" style="color: green; font-weight: bold; margin-top: 10px;">
-                    Onaylanmış dersiniz bulunmamaktadır.
-                </div>
+                <p class="info-message">Henüz seçilmiş bir ders bulunmamaktadır.</p>
             }
+
+          
+
         </div>
 
 

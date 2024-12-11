@@ -134,7 +134,7 @@ body {
     display: flex;
     flex-direction: column;
     margin-top: 20px;
-    max-height: 1500px; /* Daha büyük bir alan için artırıldı */
+    max-height: 700px; /* Daha büyük bir alan için artırıldı */
     overflow-y: auto;
     padding-right: 15px; /* Kaydırma çubuğu için biraz daha boşluk eklendi */
     border: 2px solid #ccc; /* Liste alanına çerçeve eklendi */
@@ -147,7 +147,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 100px; /* Seçim kutusunun boyutunu artırır */
+    padding: 15px; /* Seçim kutusunun boyutunu artırır */
     font-size: 1.0rem; /* Yazı boyutunu artırır */
     background-color: #f0f0f0;
     border-radius: 10px;
@@ -248,4 +248,44 @@ body {
         background-color: #dec616 /* Hoverda daha koyu kırmızı */
     }
 
+
+
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+}
+
+    .modern-table thead tr {
+        background: linear-gradient(135deg, #3a8cb5, #1d3c64);
+        color: #ffffff;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    .modern-table th, .modern-table td {
+        padding: 12px 15px;
+        border: 1px solid #dddddd;
+    }
+
+    .modern-table tbody tr:nth-child(even) {
+        background-color: #f3f3f3;
+    }
+
+    .modern-table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+.error-container {
+    margin-top: 20px;
+    color: red;
+    font-weight: bold;
+}
+
+.info-message {
+    margin-top: 20px;
+    font-size: 16px;
+}
 
