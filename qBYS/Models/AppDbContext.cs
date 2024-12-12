@@ -69,6 +69,9 @@ namespace qBYS.Models
             modelBuilder.Entity<CourseQuotas>()
                 .HasNoKey(); // Bu satırı ekleyin
 
+           
+
+
         }
     }
 }

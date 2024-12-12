@@ -84,11 +84,10 @@
             }
         </div>
 
+
+
         <!-- Ders Bilgileri -->
-
         <div id="derslerim" class="section" style="display: none;">
-
-
             <h1>Seçilen Dersler</h1>
             @if (ViewBag.Scs != null && ViewBag.Scs.Count > 0)
             {
@@ -109,6 +108,7 @@
                                 <td>@course.course.courseCode</td>
                                 <td>@course.course.department</td>
                                 <td>@course.course.credit</td>
+                                
                             </tr>
                         }
                     </tbody>
@@ -124,19 +124,7 @@
             {
                 <p class="info-message">Henüz seçilmiş bir ders bulunmamaktadır.</p>
             }
-
-          
-
         </div>
-
-
-
-
-
-
-
-
-
 
         <!-- Ders Seçimi -->
         <div id="dersler" class="section" style="display: none;">

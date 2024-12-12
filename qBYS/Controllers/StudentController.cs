@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.EntityFrameworkCore;
 using qBYS.Models;
+using System.Text;
 
 namespace qBYS.Controllers
 {
@@ -77,24 +78,9 @@ namespace qBYS.Controllers
             ViewBag.Courses = courses;
 
 
-            // DanışmanDersleri API'den çek
-            var SelectionCoursesResponse = await _httpClient.GetAsync($"https://localhost:7268/api/StudentCourseSelections/{studentId}");
-            if (!SelectionCoursesResponse.IsSuccessStatusCode)
-            {
-                ViewBag.ErrorMessage = "Ders bilgileri yüklenemedi. Lütfen tekrar deneyin.";
-                return View("StudentPanel");
-            }
-            var scsJson = await SelectionCoursesResponse.Content.ReadAsStringAsync();
-            var scs = JsonConvert.DeserializeObject<List<dynamic>>(scsJson);
-
-            // Dersleri ViewBag'e aktar
-            ViewBag.Scs = scs;
-
-
-            
             try
             {
-                // NonConfirmedSelections kontrolü
+                // Öğrencinin onay bekleyen seçimlerini kontrol et
                 var nonConfirmedResponse = await _httpClient.GetAsync($"https://localhost:7268/api/NonConfirmedSelections/Student/{studentId}");
                 if (nonConfirmedResponse.IsSuccessStatusCode)
                 {
@@ -103,14 +89,13 @@ namespace qBYS.Controllers
 
                     if (nonConfirmedSelections != null && nonConfirmedSelections.Any())
                     {
-                        ViewBag.SelectionMessage = "Ders seçiminiz danışman onayı bekliyor.";
-                        
+                        ViewBag.SelectionMessage = "Ders seçiminiz başarıyla danışman onayına gönderildi! Ders seçiminiz danışman onayı bekliyor.";
                         ViewBag.AllowCourseSelection = false;
-                        return View();
+                        return View("StudentPanel");
                     }
                 }
 
-                // StudentCourseSelections kontrolü
+                // Öğrencinin onaylanmış ders seçimlerini kontrol et
                 var approvedResponse = await _httpClient.GetAsync($"https://localhost:7268/api/StudentCourseSelections/{studentId}");
                 if (approvedResponse.IsSuccessStatusCode)
                 {
@@ -119,54 +104,50 @@ namespace qBYS.Controllers
 
                     if (approvedSelections != null && approvedSelections.Any())
                     {
+                        ViewBag.Scs = approvedSelections;
                         ViewBag.SelectionMessage = "Ders seçim işleminiz tamamlanmıştır.";
-
                         ViewBag.AllowCourseSelection = false;
-                        return View();
+                        return View("StudentPanel");
                     }
                 }
 
-                // Ders seçimi aktif hale getir
-                ViewBag.SelectionMessage = null;
-                ViewBag.AllowCourseSelection = true;
+                // Ders seçimi yapılmamış, seçim yapmaya izin ver
                 var coursesResponse = await _httpClient.GetAsync($"https://localhost:7268/api/Courses");
                 if (coursesResponse.IsSuccessStatusCode)
                 {
                     var coursesData = await coursesResponse.Content.ReadAsStringAsync();
-                    var coursess = JsonConvert.DeserializeObject<List<dynamic>>(coursesData);
-                    ViewBag.Courses = coursess;
+                    var availableCourses = JsonConvert.DeserializeObject<List<dynamic>>(coursesData);
+                    ViewBag.Courses = availableCourses;
                 }
+
+                ViewBag.SelectionMessage = null;
+                ViewBag.AllowCourseSelection = true;
+                return View("StudentPanel");
             }
             catch (Exception ex)
             {
                 ViewBag.SelectionMessage = $"Bir hata oluştu: {ex.Message}";
                 ViewBag.AllowCourseSelection = false;
+                return View("StudentPanel");
             }
 
 
-            
-            
 
 
 
 
-            return View("StudentPanel");
 
 
         }
 
 
-            
 
 
 
 
 
 
-
-
-
-          [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> CourseSelection()
         {
             try
@@ -242,8 +223,46 @@ namespace qBYS.Controllers
 
 
 
+        [HttpGet]
+       public async Task<IActionResult> StudentCourses(int studentId)
+        {
+            try
+            {
+                // API'ye istek gönder
+                var response = await _httpClient.GetAsync($"https://localhost:7268/api/StudentCourseSelections/{studentId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    // API'den gelen yanıtı deserialize et
+                    var responseData = await response.Content.ReadAsStringAsync();
+                    var courses = JsonConvert.DeserializeObject<List<Course>>(responseData);
 
-      
+                    // Eğer dersler mevcutsa ViewBag'e ata
+                    if (courses != null && courses.Any())
+                    {
+                        ViewBag.StudentCourses = courses;
+                    }
+                    else
+                    {
+                        ViewBag.StudentCourses = null;
+                    }
+                }
+                else
+                {
+                    ViewBag.StudentCourses = null;
+                    TempData["ErrorMessage"] = "Ders bilgileri alınamadı.";
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.StudentCourses = null;
+                TempData["ErrorMessage"] = $"Bir hata oluştu: {ex.Message}";
+            }
+
+            return RedirectToAction("StudentPanel");
+        }
+
 
 
         [HttpPost]
@@ -275,6 +294,10 @@ namespace qBYS.Controllers
             var studentJson = await response.Content.ReadAsStringAsync();
             var student = JsonConvert.DeserializeObject<JObject>(studentJson);
 
+            // `StudentCourseSelections` ve `NonConfirmedSelections` alanlarını kontrol et
+            var studentCourseSelections = student["studentCourseSelections"] ?? new JArray();
+            var nonConfirmedSelections = student["nonConfirmedSelections"] ?? new JArray();
+
             // AdvisorID'yi kontrol et ve mevcut değeri koru
             var updatedAdvisorID = advisorID ?? student["advisor"]?["advisorID"]?.ToObject<int?>();
 
@@ -286,7 +309,8 @@ namespace qBYS.Controllers
                 LastName = student["lastName"]?.ToString(),
                 Email = string.IsNullOrEmpty(newEmail) ? student["email"]?.ToString() : newEmail,
                 AdvisorID = updatedAdvisorID,
-                NonConfirmedSelections = student["nonConfirmedSelections"] ?? new JArray()
+                StudentCourseSelections = studentCourseSelections, // Zorunlu alanı ekle
+                NonConfirmedSelections = nonConfirmedSelections   // Zorunlu alanı ekle
             };
 
             var jsonContent = new StringContent(JsonConvert.SerializeObject(updatedStudent), System.Text.Encoding.UTF8, "application/json");
@@ -339,5 +363,11 @@ namespace qBYS.Controllers
             TempData["SuccessMessage"] = "Bilgiler başarıyla güncellendi.";
             return RedirectToAction("StudentPanel");
         }
+
+
+
+
+
+
     }
 }

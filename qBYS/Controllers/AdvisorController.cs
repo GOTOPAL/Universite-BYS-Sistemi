@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using qBYS.Models;
@@ -9,11 +10,14 @@ using qBYS.Models;
 public class AdvisorController : Controller
 {
     private readonly HttpClient _httpClient;
+    private readonly AppDbContext _context;
 
-    public AdvisorController(IHttpClientFactory httpClientFactory)
+    public AdvisorController(HttpClient httpClient, AppDbContext context)
     {
-        _httpClient = httpClientFactory.CreateClient();
+        _httpClient = httpClient;
+        _context = context;
     }
+
 
     public async Task<IActionResult> AdvisorPanel()
     {
@@ -67,8 +71,79 @@ public class AdvisorController : Controller
             TempData["ErrorMessage"] = $"Ders listesi yüklenirken bir hata oluştu: {ex.Message}";
         }
 
+
+
+
+
+
+
+        // Dersleri API'den çek
+        var courseResponse = await _httpClient.GetAsync("https://localhost:7268/api/Courses");
+        if (!courseResponse.IsSuccessStatusCode)
+        {
+            ViewBag.ErrorMessage = "Ders bilgileri yüklenemedi. Lütfen tekrar deneyin.";
+            return View("AdvisorPanel");
+        }
+
+        var courseJson = await courseResponse.Content.ReadAsStringAsync();
+        var courses = JsonConvert.DeserializeObject<List<dynamic>>(courseJson);
+
+        // Sadece seçmeli dersleri filtrele (isMandatory = false)
+        var electiveCourses = courses.Where(course => course.isMandatory == false).ToList();
+
+        // Kota bilgilerini ekle
+        var coursesWithQuota = new List<dynamic>();
+        foreach (var course in electiveCourses)
+        {
+            var quotaResponse = await _httpClient.GetAsync($"https://localhost:7268/api/CourseQuotas/{course.courseID}");
+            if (quotaResponse.IsSuccessStatusCode)
+            {
+                var quotaJson = await quotaResponse.Content.ReadAsStringAsync();
+                var quotaData = JsonConvert.DeserializeObject<dynamic>(quotaJson);
+
+                // Kota bilgilerini ders objesine ekle
+                coursesWithQuota.Add(new
+                {
+                    course.courseID,
+                    course.courseName,
+                    course.courseCode,
+                    course.credit,
+                    quota = quotaData.quota,
+                    remainingQuota = quotaData.remainingQuota
+                });
+            }
+            else
+            {
+                // Kota bilgisi alınamadığında varsayılan değerler ekle
+                coursesWithQuota.Add(new
+                {
+                    course.courseID,
+                    course.courseName,
+                    course.courseCode,
+                    course.credit,
+                    quota = "-",
+                    remainingQuota = "-"
+                });
+            }
+        }
+
+        // ViewBag'e kota bilgileriyle birlikte seçmeli dersleri ekle
+        ViewBag.Courses = coursesWithQuota;
+
+
+
         return View();
     }
+
+
+
+
+   
+
+    
+
+
+
 
 
 
@@ -257,5 +332,32 @@ public class AdvisorController : Controller
 
 
 
+
+
+
+
+
+
+
+
+
+   
+
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
 

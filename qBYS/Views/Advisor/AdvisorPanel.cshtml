@@ -25,12 +25,13 @@
         {
             <h2>Danışman Bilgileri Yüklenemedi</h2>
         }
-        <div id="menu-items">
-            <div class="nav-item active" onclick="showSection('duyurular')">Duyurular</div>
-            <div class="nav-item" onclick="showSection('danismanBilgileri')">Danışman Bilgileri</div>
-            <div class="nav-item" onclick="showSection('dersOnaylama')">Ders Onaylama</div>
-            <div class="nav-item" onclick="showSection('ogrencilerim')">Öğrencilerim</div>
-        </div>
+    <div id="menu-items">
+        <div class="nav-item active" onclick="showSection('duyurular')">Duyurular</div>
+        <div class="nav-item" onclick="showSection('danismanBilgileri')">Danışman Bilgileri</div>
+        <div class="nav-item" onclick="showSection('dersOnaylama')">Ders Onaylama</div>
+        <div class="nav-item" onclick="showSection('dersKota')">Ders Kota Bilgileri</div>
+        <div class="nav-item" onclick="showSection('ogrencilerim')">Öğrencilerim</div>
+    </div>
         <div class="nav-item logout" onclick="logout()">Çıkış Yap</div>
     </div>
 
@@ -91,49 +92,95 @@
         <!-- Ders Onaylama -->
         <div id="dersOnaylama" class="section">
             <h1>Ders Onaylama</h1>
-            <div class="course-approval">
-                <label for="pendingCourses">Onay Bekleyen Dersler:</label>
-                <ul id="pendingCoursesList" class="combo-list">
-                    @if (ViewBag.PendingCourses != null && ViewBag.PendingCourses.Count > 0)
-                    {
-                        foreach (var course in ViewBag.PendingCourses)
+
+            @if (ViewBag.PendingCourses != null && ViewBag.PendingCourses.Count > 0)
+            {
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Ders Adı</th>
+                            <th>Ders Kodu</th>
+                            <th>Öğrenci Adı</th>
+                            <th>Öğrenci Numarası</th>
+                            <th>Onay/Reddet</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var course in ViewBag.PendingCourses)
                         {
-                            <li class="course-option">
-                                <span>@course.courseName (@course.courseID)</span>
-                                <span> - Öğrenci: @course.firstName @course.lastName (@course.studentID)</span>
-                                <form asp-controller="Advisor" asp-action="ApproveCourse" method="post" style="display:inline;">
-                                    <input type="hidden" name="id" value="@course.id" />
-                                    <input type="hidden" name="studentID" value="@course.studentID" />
-                                    <input type="hidden" name="courseID" value="@course.courseID" />
-                                    <button type="submit" class="btn">Onayla</button>
-                                </form>
-                                <form asp-controller="Advisor" asp-action="RejectCourse" method="post" style="display:inline;">
-                                    <input type="hidden" name="id" value="@course.id" />
-                                    <button type="submit" class="btn btn-delete">Reddet</button>
-                                </form>
-                            </li>
+                            <tr>
+                                <td>@course.courseName</td>
+                                <td>@course.courseID</td>
+                                <td>@course.firstName @course.lastName</td>
+                                <td>@course.studentID</td>
+                                <td>
+                                    <form asp-controller="Advisor" asp-action="ApproveCourse" method="post" style="display:inline;">
+                                        <input type="hidden" name="id" value="@course.id" />
+                                        <input type="hidden" name="studentID" value="@course.studentID" />
+                                        <input type="hidden" name="courseID" value="@course.courseID" />
+                                        <button type="submit" class="btn btn-approve">Onayla</button>
+                                    </form>
+                                    <form asp-controller="Advisor" asp-action="RejectCourse" method="post" style="display:inline;">
+                                        <input type="hidden" name="id" value="@course.id" />
+                                        <button type="submit" class="btn btn-reject">Reddet</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="error-container">
+                    <p>Onay bekleyen ders bulunamadı.</p>
+                </div>
+            }
+        </div>
+
+        <!-- Ders kota -->
+        <div id="dersKota" class="section">
+            <h1>Ders Kotası</h1>
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>Ders Adı</th>
+                        <th>Ders Kodu</th>
+                        <th>Kredi</th>
+                        <th>Kota</th>
+                        <th>Kalan Kota</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.Courses != null && ViewBag.Courses.Count > 0)
+                    {
+                        foreach (var course in ViewBag.Courses)
+                        {
+                            <tr>
+                                <td>@course.courseName</td>
+                                <td>@course.courseCode</td>
+                                <td>@course.credit</td>
+                                <td>@course.quota</td>
+                                <td>@course.remainingQuota</td>
+                            </tr>
                         }
                     }
                     else
                     {
-                        <p>Onay bekleyen ders bulunamadı.</p>
-                        <br />
-                        <br />
+                        <tr>
+                            <td colspan="5" class="info-message">Seçmeli ders bulunmamaktadır.</td>
+                        </tr>
                     }
-                </ul>
-            </div>
-
-             <br />
-            <br />
-            @if (TempData["ApproveCourse"] != null)
-            {
-                <p class="success-message" style="color: green;">@TempData["ApproveCourse"]</p>
-            }
-            @if (TempData["RejectCourse"] != null)
-            {
-                <p class="error-message" style="color: red;">@TempData["RejectCourse"]</p>
-            }
+                </tbody>
+            </table>
         </div>
+
+
+
+
+
+
+
 
 
 

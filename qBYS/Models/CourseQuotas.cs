@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace qBYS.Models
 {
     public class CourseQuotas
     {
+      
         public int CourseId { get; set; }
         public int Quota { get; set; }
         public int RemainingQuota { get; set; }
@@ -39,4 +41,17 @@ namespace qBYS.Models
         public virtual Student? Student { get; set; }
         public virtual Course? Course { get; set; }
     }
+
+
+
+    public class CourseWithQuotaViewModel
+    {
+        public int CourseID { get; set; }
+        public string CourseName { get; set; }
+        public string CourseCode { get; set; }
+        public int Credit { get; set; }
+        public string Quota { get; set; } // Kota bilgisi yoksa "-"
+        public string RemainingQuota { get; set; } // Kalan kota bilgisi yoksa "-"
+    }
+
 }

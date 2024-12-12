@@ -23,5 +23,7 @@ namespace qBYS.Models
 
         [ForeignKey("CourseID")]
         public virtual Course? Course { get; set; }
+
+
     }
 }
