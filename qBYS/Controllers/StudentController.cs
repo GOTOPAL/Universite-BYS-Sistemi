@@ -64,7 +64,7 @@ namespace qBYS.Controllers
                 ViewBag.Advisor = null;
             }
 
-            // Dersleri API'den çek
+         /*   // Dersleri API'den çek
             var courseResponse = await _httpClient.GetAsync("https://localhost:7268/api/Courses");
             if (!courseResponse.IsSuccessStatusCode)
             {
@@ -75,7 +75,7 @@ namespace qBYS.Controllers
             var courses = JsonConvert.DeserializeObject<List<dynamic>>(courseJson);
 
             // Dersleri ViewBag'e aktar
-            ViewBag.Courses = courses;
+            ViewBag.Courses = courses; */
 
 
             try
@@ -182,6 +182,9 @@ namespace qBYS.Controllers
             }
         }
 
+
+
+
         [HttpPost]
         public async Task<IActionResult> SubmitCourseSelections(List<int> selectedCourseIds)
         {
@@ -220,6 +223,11 @@ namespace qBYS.Controllers
 
             return RedirectToAction("StudentPanel");
         }
+
+
+
+
+
 
 
 

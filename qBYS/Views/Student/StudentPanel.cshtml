@@ -108,7 +108,7 @@
                                 <td>@course.course.courseCode</td>
                                 <td>@course.course.department</td>
                                 <td>@course.course.credit</td>
-                                
+
                             </tr>
                         }
                     </tbody>
@@ -126,26 +126,61 @@
             }
         </div>
 
+
+
+
+
         <!-- Ders Seçimi -->
+        @{
+            // ViewBag.Courses'ı kontrol edip varsayılan bir liste oluşturuyoruz
+            var courses = ViewBag.Courses != null ? ((IEnumerable<dynamic>)ViewBag.Courses).ToList() : new List<dynamic>();
+        }
+
         <div id="dersler" class="section" style="display: none;">
             <h1>Ders Seçimi</h1>
             @if (ViewBag.AllowCourseSelection == true)
             {
-                <p>Lütfen derslerinizi seçin:</p>
+                <p>Lütfen derslerinizi seçin (Zorunlu derslerden en fazla 6 adet seçebilirsiniz):</p>
                 <form id="courseSelectionForm" method="post" asp-action="SubmitCourseSelections">
-                    <div class="course-selection">
-                        <ul id="courseList" class="combo-list">
-                            @foreach (var course in ViewBag.Courses)
+                    <!-- Zorunlu Dersler Bölümü -->
+                    <div class="mandatory-courses">
+                        <h2>Zorunlu Dersler</h2>
+                        <ul id="mandatoryCourseList" class="combo-list">
+                            @foreach (var course in courses.Where(c => Convert.ToBoolean(c.isMandatory)))
                             {
-                                <li class="course-option" onclick="toggleCourseSelection('@course.courseID')">
+                                <li class="course-option" onclick="toggleCourseSelection(this, @course.courseID)">
                                     <span>@course.courseName (@course.courseCode)</span>
-                                    <span class="course-credits">@course.credit Kredi</span>
+                                    <div>
+                                        <span>Kredi: @course.credit</span>
+                                        <br>
+                                        <span>Zorunlu</span>
+                                    </div>
+                                    <input type="checkbox" name="selectedCourseIds" value="@course.courseID" class="mandatory-checkbox" style="display: none;">
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <!-- Seçmeli Dersler Bölümü -->
+                    <div class="elective-courses">
+                        <h2>Seçmeli Dersler</h2>
+                        <ul id="electiveCourseList" class="combo-list">
+                            @foreach (var course in courses.Where(c => !Convert.ToBoolean(c.isMandatory)))
+                            {
+                                <li class="course-option" onclick="toggleCourseSelection(this, @course.courseID)">
+                                    <span>@course.courseName (@course.courseCode)</span>
+                                    <div>
+                                        <span>Kredi: @course.credit</span>
+                                        <br>
+                                        <span>Seçmeli</span>
+                                    </div>
                                     <input type="checkbox" name="selectedCourseIds" value="@course.courseID" style="display: none;">
                                 </li>
                             }
                         </ul>
-                        <button type="submit" id="confirmSelection" class="btn">Dersleri Onayla</button>
                     </div>
+
+                    <button type="submit" id="confirmSelection" class="btn">Dersleri Onayla</button>
                 </form>
             }
             else if (ViewBag.SelectionMessage != null)
@@ -157,6 +192,33 @@
                 <p class="error-message">Ders bilgileri alınamadı. Lütfen daha sonra tekrar deneyiniz.</p>
             }
         </div>
+
+
+
+        <script>function toggleCourseSelection(element, courseId) {
+                const checkbox = element.querySelector('input[type="checkbox"]');
+                checkbox.checked = !checkbox.checked;
+
+                if (checkbox.classList.contains('mandatory-checkbox')) {
+                    const mandatoryCheckboxes = document.querySelectorAll('.mandatory-checkbox');
+                    const selectedCount = Array.from(mandatoryCheckboxes).filter(cb => cb.checked).length;
+
+                    if (selectedCount > 4) {
+                        alert('Zorunlu derslerden en fazla 4 adet seçebilirsiniz.');
+                        checkbox.checked = false;
+                    }
+                }
+
+                // Görsel seçili durumu için elementin sınıfını değiştiriyoruz
+                if (checkbox.checked) {
+                    element.classList.add('selected');
+                } else {
+                    element.classList.remove('selected');
+                }
+            }</script>
+
+
+
 
 
         <!-- Danışman Bilgileri Sayfası -->

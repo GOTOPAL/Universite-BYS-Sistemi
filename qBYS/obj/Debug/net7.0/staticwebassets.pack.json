@@ -21,6 +21,10 @@
       "PackagePath": "staticwebassets/favicon.ico"
     },
     {
+      "Id": "/Users/goktug/Desktop/qBYS/qBYS/wwwroot/js/adscript.js",
+      "PackagePath": "staticwebassets/js/adscript.js"
+    },
+    {
       "Id": "/Users/goktug/Desktop/qBYS/qBYS/wwwroot/js/ascript.js",
       "PackagePath": "staticwebassets/js/ascript.js"
     },

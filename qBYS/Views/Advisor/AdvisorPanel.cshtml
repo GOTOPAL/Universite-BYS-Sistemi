@@ -38,7 +38,7 @@
     <!-- İçerik Alanı -->
     <div class="content">
         <!-- Duyurular -->
-        <div id="duyurular" class="section">
+        <div id="duyurular" class="section" style="display: none;">
             <h1>Duyurular</h1>
             <p><strong>Danışmanlık Toplantısı:</strong> 10 Ocak'ta yapılacaktır.</p>
             <p><strong>Sistem Güncellemesi:</strong> 20 Aralık 2024 tarihinde bakım yapılacaktır.</p>
@@ -90,7 +90,7 @@
 
 
         <!-- Ders Onaylama -->
-        <div id="dersOnaylama" class="section">
+        <div id="dersOnaylama" class="section" style="display: none;">
             <h1>Ders Onaylama</h1>
 
             @if (ViewBag.PendingCourses != null && ViewBag.PendingCourses.Count > 0)
@@ -139,7 +139,7 @@
         </div>
 
         <!-- Ders kota -->
-        <div id="dersKota" class="section">
+        <div id="dersKota" class="section" style="display: none;">
             <h1>Ders Kotası</h1>
             <table class="modern-table">
                 <thead>
@@ -184,10 +184,9 @@
 
 
 
-
-
         <!-- Öğrencilerim -->
-        <div id="ogrencilerim" class="section" style="display: none;">
+    
+        <div id="ogrencilerim" class="section" style="display:none;">
             <h1>Öğrencilerim</h1>
             @if (ViewBag.Advisor != null && ViewBag.Advisor.students != null && ViewBag.Advisor.students.Count > 0)
             {
@@ -205,8 +204,27 @@
             {
                 <p>Öğrenci bilgileri yüklenemedi veya danışmana bağlı öğrenci bulunamadı.</p>
             }
-        </div>
 
-    </div>
+            <!-- Modal Kutusu -->
+            <div id="studentDetailsModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <h2>Öğrenci Detayları</h2>
+                    <p><strong>Adı Soyadı:</strong> <span id="studentName"></span></p>
+                    <p><strong>E-posta:</strong> <span id="studentEmail"></span></p>
+                    <p><strong>Aldığı Dersler:</strong></p>
+                    <ul id="studentCoursesList"></ul>
+                </div>
+
+            </div>
+
+
+
+
+
+
+
+
+
 </body>
 </html>

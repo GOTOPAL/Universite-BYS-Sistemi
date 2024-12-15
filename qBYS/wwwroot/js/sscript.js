@@ -23,6 +23,9 @@ document.addEventListener("DOMContentLoaded", () => {
     showSection(activeSection);
 });
 
+
+
+
 // Ders seçimi işlevi
 let selectedCourses = [];
 function toggleSelection(element, courseId) {
@@ -32,6 +35,30 @@ function toggleSelection(element, courseId) {
     } else {
         element.classList.add("selected");
         selectedCourses.push(courseId);
+    }
+}
+
+function toggleCourseSelection(element, courseId) {
+    const checkbox = element.querySelector('input[type="checkbox"]');
+    const isMandatory = checkbox.classList.contains('mandatory-checkbox');
+    checkbox.checked = !checkbox.checked;
+
+    if (isMandatory) {
+        const mandatoryCheckboxes = document.querySelectorAll('.mandatory-checkbox');
+        const selectedCount = Array.from(mandatoryCheckboxes).filter(cb => cb.checked).length;
+
+        if (selectedCount > 4) {
+            alert('Zorunlu derslerden en fazla 6 adet seçebilirsiniz.');
+            checkbox.checked = false; // Fazladan seçimi iptal et
+            return;
+        }
+    }
+
+    // Görsel seçili durumu için elementin sınıfını değiştiriyoruz
+    if (checkbox.checked) {
+        element.classList.add('selected');
+    } else {
+        element.classList.remove('selected');
     }
 }
 

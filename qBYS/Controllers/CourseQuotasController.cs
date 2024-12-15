@@ -39,6 +39,36 @@ namespace qBYS.Controllers
         }
 
 
+
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateCourseQuota([FromBody] CourseQuotas updatedCourseQuota)
+        {
+            if (updatedCourseQuota == null)
+            {
+                return BadRequest("Geçersiz veri.");
+            }
+
+            var courseQuota = await _context.CourseQuotas.FirstOrDefaultAsync(cq => cq.CourseId == updatedCourseQuota.CourseId);
+            if (courseQuota == null)
+            {
+                return NotFound("Kota bulunamadı.");
+            }
+
+            // Kota güncelleme
+            courseQuota.RemainingQuota = updatedCourseQuota.RemainingQuota;
+
+            _context.CourseQuotas.Update(courseQuota);
+            await _context.SaveChangesAsync();
+
+            return Ok(courseQuota);
+        }
+
+
+
+
+
+
+
         // GET: api/CourseQuotas/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCourseQuota(int id)

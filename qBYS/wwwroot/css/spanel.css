@@ -133,46 +133,47 @@ body {
 .combo-list {
     display: flex;
     flex-direction: column;
-    margin-top: 20px;
-    max-height: 700px; /* Daha büyük bir alan için artırıldı */
+    margin-top: 10px; /* Liste üst boşluğu küçültüldü */
+    max-height: 400px; /* Maksimum yükseklik azaltıldı */
     overflow-y: auto;
-    padding-right: 15px; /* Kaydırma çubuğu için biraz daha boşluk eklendi */
-    border: 2px solid #ccc; /* Liste alanına çerçeve eklendi */
-    border-radius: 10px;
-    padding: 10px;
-    background-color: #f9f9f9; /* Liste alanının arka plan rengi */
+    padding-right: 5px; /* Kaydırma çubuğu için minimum boşluk */
+    border: 1px solid #ccc; /* Çerçeve kalınlığı azaltıldı */
+    border-radius: 5px; /* Kenar yuvarlaklığı küçültüldü */
+    padding: 5px; /* İç boşluk azaltıldı */
+    background-color: #f9f9f9; /* Arka plan rengi sabit */
 }
 
 .course-option {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px; /* Seçim kutusunun boyutunu artırır */
-    font-size: 1.0rem; /* Yazı boyutunu artırır */
+    padding: 3px; /* Seçim kutusunun iç boşluğu küçültüldü */
+    font-size: 0.9rem; /* Yazı boyutu küçültüldü */
     background-color: #f0f0f0;
-    border-radius: 10px;
-    margin-bottom: 10px;
+    border-radius: 5px; /* Kenar yuvarlaklığı küçültüldü */
+    margin-bottom: 3px; /* Alt boşluk küçültüldü */
     cursor: pointer;
-    transition: background-color 0.3s, border 0.3s, transform 0.2s;
+    transition: background-color 0.2s, border 0.2s, transform 0.1s;
 }
 
     .course-option:hover {
-        background-color: #e0e0e0;
-        transform: scale(1.02); /* Hover efekti */
+        background-color: #e8e8e8;
+        transform: scale(1.01); /* Hover efekti hafifletildi */
     }
 
     .course-option.selected {
         background-color: #0078d7;
         color: white;
-        border: 2px solid #00509e;
+        border: 1px solid #00509e; /* Çerçeve kalınlığı azaltıldı */
         font-weight: bold;
-        transform: scale(1.00); /* Seçilenler için belirgin efekt */
+        transform: scale(1); /* Seçilenler için efekt kaldırıldı */
     }
 
 .course-credits {
-    font-size: 1rem; /* Kredi yazısının boyutunu ayarla */
-    color: #444;
+    font-size: 0.8rem; /* Kredi yazısının boyutu küçültüldü */
+    color: #666; /* Yazı rengi biraz soluklaştırıldı */
 }
+
 
 
 /* Güncelleme Bölümü */
