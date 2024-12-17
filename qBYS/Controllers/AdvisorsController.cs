@@ -11,7 +11,7 @@ namespace qBYS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdvisorsController : ControllerBase
+        public class AdvisorsController : ControllerBase
     {
         private readonly AppDbContext _context;
 

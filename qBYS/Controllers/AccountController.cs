@@ -6,6 +6,8 @@ using qBYS.Models;
 
 namespace qBYS.Controllers
 {
+   // [Route("api/[controller]")]
+
     public class AccountController : Controller
     {
         private readonly AppDbContext _context;
@@ -51,23 +53,17 @@ namespace qBYS.Controllers
         }
 
         // Kullanıcı girişini kontrol eden aksiyon
-        [HttpPost]
+
         public async Task<IActionResult> LoginUser(string username, string password, string role)
         {
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(role))
-            {
-                ViewBag.ErrorMessage = "Kullanıcı adı, şifre veya rol boş olamaz.";
-                return View("Login");
-            }
-
+           
             // Kullanıcıyı kontrol et
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Username == username && u.Role == role);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username && u.Role == role);
 
             if (user != null)
             {
                 // Şifre doğrulama (örnek: Hash'li şifre karşılaştırması)
-                if (user.PasswordHash != password) // Şifre doğrulama mekanizması eklemelisiniz
+                if (user.PasswordHash != password) 
                 {
                     ViewBag.ErrorMessage = "Şifre yanlış.";
                     return View("Login");
@@ -110,7 +106,7 @@ namespace qBYS.Controllers
             }
 
             // Kullanıcı bulunamazsa
-            ViewBag.ErrorMessage = "Geçersiz kullanıcı adı, şifre veya rol.";
+            ViewBag.ErrorMessage = "Geçersiz kullanıcı adı veya şifre.";
             return View("Login");
         }
     }

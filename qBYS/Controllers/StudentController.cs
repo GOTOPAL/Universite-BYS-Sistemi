@@ -64,20 +64,6 @@ namespace qBYS.Controllers
                 ViewBag.Advisor = null;
             }
 
-         /*   // Dersleri API'den çek
-            var courseResponse = await _httpClient.GetAsync("https://localhost:7268/api/Courses");
-            if (!courseResponse.IsSuccessStatusCode)
-            {
-                ViewBag.ErrorMessage = "Ders bilgileri yüklenemedi. Lütfen tekrar deneyin.";
-                return View("StudentPanel");
-            }
-            var courseJson = await courseResponse.Content.ReadAsStringAsync();
-            var courses = JsonConvert.DeserializeObject<List<dynamic>>(courseJson);
-
-            // Dersleri ViewBag'e aktar
-            ViewBag.Courses = courses; */
-
-
             try
             {
                 // Öğrencinin onay bekleyen seçimlerini kontrol et
@@ -131,19 +117,7 @@ namespace qBYS.Controllers
                 return View("StudentPanel");
             }
 
-
-
-
-
-
-
-
         }
-
-
-
-
-
 
 
 
@@ -158,7 +132,7 @@ namespace qBYS.Controllers
                 if (!response.IsSuccessStatusCode)
                 {
                     ViewBag.ErrorMessage = "API'den ders bilgileri alınamadı.";
-                    return View("CourseSelection");
+                    return View("StudentPanel");
                 }
 
                 // JSON yanıtını al ve deserialize et
@@ -168,17 +142,17 @@ namespace qBYS.Controllers
                 if (courses == null || !courses.Any())
                 {
                     ViewBag.ErrorMessage = "Ders listesi bulunamadı.";
-                    return View("CourseSelection");
+                    return View("StudentPanel");
                 }
 
                 ViewBag.Courses = courses; // Ders listesini ViewBag'e aktar
-                return View("CourseSelection"); // Ders seçimi sayfasını göster
+                return View("StudentPanel"); // Ders seçimi sayfasını göster
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Hata: {ex.Message}");
                 ViewBag.ErrorMessage = "Bir hata oluştu.";
-                return View("CourseSelection");
+                return View("StudentPanel");
             }
         }
 

@@ -77,59 +77,7 @@ public class AdvisorController : Controller
 
 
 
-        // Dersleri API'den çek
-        var courseResponse = await _httpClient.GetAsync("https://localhost:7268/api/Courses");
-        if (!courseResponse.IsSuccessStatusCode)
-        {
-            ViewBag.ErrorMessage = "Ders bilgileri yüklenemedi. Lütfen tekrar deneyin.";
-            return View("AdvisorPanel");
-        }
-
-        var courseJson = await courseResponse.Content.ReadAsStringAsync();
-        var courses = JsonConvert.DeserializeObject<List<dynamic>>(courseJson);
-
-        // Sadece seçmeli dersleri filtrele (isMandatory = false)
-        var electiveCourses = courses.Where(course => course.isMandatory == false).ToList();
-
-        // Kota bilgilerini ekle
-        var coursesWithQuota = new List<dynamic>();
-        foreach (var course in electiveCourses)
-        {
-            var quotaResponse = await _httpClient.GetAsync($"https://localhost:7268/api/CourseQuotas/{course.courseID}");
-            if (quotaResponse.IsSuccessStatusCode)
-            {
-                var quotaJson = await quotaResponse.Content.ReadAsStringAsync();
-                var quotaData = JsonConvert.DeserializeObject<dynamic>(quotaJson);
-
-                // Kota bilgilerini ders objesine ekle
-                coursesWithQuota.Add(new
-                {
-                    course.courseID,
-                    course.courseName,
-                    course.courseCode,
-                    course.credit,
-                    quota = quotaData.quota,
-                    remainingQuota = quotaData.remainingQuota
-                });
-            }
-            else
-            {
-                // Kota bilgisi alınamadığında varsayılan değerler ekle
-                coursesWithQuota.Add(new
-                {
-                    course.courseID,
-                    course.courseName,
-                    course.courseCode,
-                    course.credit,
-                    quota = "-",
-                    remainingQuota = "-"
-                });
-            }
-        }
-
-        // ViewBag'e kota bilgileriyle birlikte seçmeli dersleri ekle
-        ViewBag.Courses = coursesWithQuota;
-
+       
 
 
 

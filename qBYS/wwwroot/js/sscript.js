@@ -48,7 +48,7 @@ function toggleCourseSelection(element, courseId) {
         const selectedCount = Array.from(mandatoryCheckboxes).filter(cb => cb.checked).length;
 
         if (selectedCount > 4) {
-            alert('Zorunlu derslerden en fazla 6 adet seçebilirsiniz.');
+            alert('Zorunlu derslerden en fazla 4 adet seçebilirsiniz.');
             checkbox.checked = false; // Fazladan seçimi iptal et
             return;
         }
