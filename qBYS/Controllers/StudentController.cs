@@ -119,9 +119,6 @@ namespace qBYS.Controllers
 
         }
 
-
-
-        [HttpGet]
         public async Task<IActionResult> CourseSelection()
         {
             try
@@ -156,10 +153,6 @@ namespace qBYS.Controllers
             }
         }
 
-
-
-
-        [HttpPost]
         public async Task<IActionResult> SubmitCourseSelections(List<int> selectedCourseIds)
         {
             if (selectedCourseIds == null || selectedCourseIds.Count == 0)
@@ -198,14 +191,6 @@ namespace qBYS.Controllers
             return RedirectToAction("StudentPanel");
         }
 
-
-
-
-
-
-
-
-        [HttpGet]
        public async Task<IActionResult> StudentCourses(int studentId)
         {
             try
@@ -246,8 +231,6 @@ namespace qBYS.Controllers
         }
 
 
-
-        [HttpPost]
         public async Task<IActionResult> UpdateStudent(int id, string newEmail, string newPassword, int? advisorID)
         {
             var studentIdString = HttpContext.Session.GetString("StudentID");
@@ -257,12 +240,6 @@ namespace qBYS.Controllers
             {
                 TempData["ErrorMessage"] = "Oturum bilgisi alınamadı. Lütfen tekrar giriş yapın.";
                 return RedirectToAction("Login", "Account");
-            }
-
-            if (studentId != id)
-            {
-                TempData["ErrorMessage"] = "Geçersiz işlem. ID eşleşmiyor.";
-                return RedirectToAction("StudentPanel");
             }
 
             // Students API'den mevcut öğrenci bilgilerini al
@@ -345,11 +322,5 @@ namespace qBYS.Controllers
             TempData["SuccessMessage"] = "Bilgiler başarıyla güncellendi.";
             return RedirectToAction("StudentPanel");
         }
-
-
-
-
-
-
     }
 }

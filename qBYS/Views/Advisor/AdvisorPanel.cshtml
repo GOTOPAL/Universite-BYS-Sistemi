@@ -29,6 +29,7 @@
         <div class="nav-item active" onclick="showSection('duyurular')">Duyurular</div>
         <div class="nav-item" onclick="showSection('danismanBilgileri')">Danışman Bilgileri</div>
         <div class="nav-item" onclick="showSection('dersOnaylama')">Ders Onaylama</div>
+        <div class="nav-item" onclick="showSection('dersKota')">Ders Kota Bilgileri</div>
         <div class="nav-item" onclick="showSection('ogrencilerim')">Öğrencilerim</div>
     </div>
         <div class="nav-item logout" onclick="logout()">Çıkış Yap</div>
@@ -137,7 +138,46 @@
             }
         </div>
 
-     
+
+        <!-- Ders kota -->
+        <div id="dersKota" class="section" style="display: none;">
+            <h1>Ders Kotası</h1>
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>Ders Adı</th>
+                        <th>Ders Kodu</th>
+                        <th>Kredi</th>
+                        <th>Kota</th>
+                        <th>Kalan Kota</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.Courses != null && ViewBag.Courses.Count > 0)
+                    {
+                        foreach (var course in ViewBag.Courses)
+                        {
+                            <tr>
+                                <td>@course.courseName</td>
+                                <td>@course.courseCode</td>
+                                <td>@course.credit</td>
+                                <td>@course.quota</td>
+                                <td>@course.remainingQuota</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="info-message">Seçmeli ders bulunmamaktadır.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+
 
 
 
@@ -148,7 +188,7 @@
 
 
         <!-- Öğrencilerim -->
-    
+
         <div id="ogrencilerim" class="section" style="display:none;">
             <h1>Öğrencilerim</h1>
             @if (ViewBag.Advisor != null && ViewBag.Advisor.students != null && ViewBag.Advisor.students.Count > 0)

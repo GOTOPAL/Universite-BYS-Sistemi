@@ -75,9 +75,15 @@ public class AdvisorController : Controller
 
 
 
+        var coursesWithQuota = await GetElectiveCoursesWithQuota();
+
+        if (coursesWithQuota != null)
+        {
+            ViewBag.Courses = coursesWithQuota;
+        }
 
 
-       
+
 
 
 
@@ -87,18 +93,68 @@ public class AdvisorController : Controller
 
 
 
-   
-
-    
 
 
+    public async Task<List<dynamic>> GetElectiveCoursesWithQuota()
+    {
+        var courseResponse = await _httpClient.GetAsync("https://localhost:7268/api/Courses");
+        if (!courseResponse.IsSuccessStatusCode)
+        {
+            return null;
+        }
+
+        var courseJson = await courseResponse.Content.ReadAsStringAsync();
+        var courses = JsonConvert.DeserializeObject<List<dynamic>>(courseJson);
+
+        // Seçmeli dersleri filtrele
+        var electiveCourses = courses.Where(course => course.isMandatory == false).ToList();
+
+        // Kota bilgilerini ekle
+        var coursesWithQuota = new List<dynamic>();
+        foreach (var course in electiveCourses)
+        {
+            var quotaResponse = await _httpClient.GetAsync($"https://localhost:7268/api/CourseQuotas/{course.courseID}");
+            if (quotaResponse.IsSuccessStatusCode)
+            {
+                var quotaJson = await quotaResponse.Content.ReadAsStringAsync();
+                var quotaData = JsonConvert.DeserializeObject<dynamic>(quotaJson);
+
+                // Kota bilgilerini ders objesine ekle
+                coursesWithQuota.Add(new
+                {
+                    course.courseID,
+                    course.courseName,
+                    course.courseCode,
+                    course.credit,
+                    quota = quotaData.quota,
+                    remainingQuota = quotaData.remainingQuota
+                });
+            }
+            else
+            {
+                // Kota bilgisi alınamadığında varsayılan değerler ekle
+                coursesWithQuota.Add(new
+                {
+                    course.courseID,
+                    course.courseName,
+                    course.courseCode,
+                    course.credit,
+                    quota = "-",
+                    remainingQuota = "-"
+                });
+            }
+        }
+
+        return coursesWithQuota;
+    }
 
 
 
 
 
 
-    [HttpPost]
+
+
     public async Task<IActionResult> UpdateAdvisor(int id, string newEmail, string newPassword)
     {
         // Oturumdan AdvisorID ve UserID'yi alın
@@ -196,25 +252,7 @@ public class AdvisorController : Controller
         return RedirectToAction("AdvisorPanel");
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetPendingCourses()
-    {
-        var response = await _httpClient.GetAsync("https://localhost:7268/api/NonConfirmedSelections");
-
-        if (!response.IsSuccessStatusCode)
-        {
-            TempData["ErrorMessage"] = "Onay bekleyen dersler alınamadı.";
-            return RedirectToAction("AdvisorPanel");
-        }
-
-        var json = await response.Content.ReadAsStringAsync();
-        var pendingCourses = JsonConvert.DeserializeObject<List<dynamic>>(json);
-
-        ViewBag.PendingCourses = pendingCourses;
-
-        return View("PendingCourses");
-    }
-    [HttpPost]
+    
     public async Task<IActionResult> RejectCourse(int id)
     {
         try
@@ -241,7 +279,6 @@ public class AdvisorController : Controller
     }
 
 
-    [HttpPost]
     public async Task<IActionResult> ApproveCourse(int id, int studentID, int courseID)
     {
         try
@@ -281,6 +318,23 @@ public class AdvisorController : Controller
 
 
 
+    public async Task<IActionResult> GetPendingCourses()
+    {
+        var response = await _httpClient.GetAsync("https://localhost:7268/api/NonConfirmedSelections");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            TempData["ErrorMessage"] = "Onay bekleyen dersler alınamadı.";
+            return RedirectToAction("AdvisorPanel");
+        }
+
+        var json = await response.Content.ReadAsStringAsync();
+        var pendingCourses = JsonConvert.DeserializeObject<List<dynamic>>(json);
+
+        ViewBag.PendingCourses = pendingCourses;
+
+        return View("PendingCourses");
+    }
 
 
 
@@ -288,9 +342,12 @@ public class AdvisorController : Controller
 
 
 
+    
 
 
-   
+
+
+
 
 
 

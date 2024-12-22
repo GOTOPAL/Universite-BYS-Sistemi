@@ -10,7 +10,6 @@ namespace qBYS.Models
         public int Quota { get; set; }
         public int RemainingQuota { get; set; }
         public Course Course { get; set; } // Bu alanda course verisi null geliyor, gerekirse daha fazla özelleştirebilirsiniz
-
     }
     public class CourseQuotaResponse
     {

@@ -37,7 +37,7 @@ namespace qBYS.Controllers
 
             return Ok(courseQuotas);
         }
-
+        
 
 
         [HttpPut("update")]
